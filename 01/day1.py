@@ -17,19 +17,22 @@ for line in file:
     list2.append(int(arr[1])) 
 
 file.close()
-print(list1)
-print(list2)
 
-#Data Array in 
+#Change the py arr into numpy arr -> Memorylayout needs to be contigous
 array1 = np.array(list1, dtype=np.int32)
 array2 = np.array(list2, dtype=np.int32)
 
 
-#void quicksort_wrapper(int* array, int size)
+#invoke quicksort of solve_lib.c
 lib.quicksort_wrapper(array1.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), len(array1))
 lib.quicksort_wrapper(array2.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), len(array2))
 print("Sortiertes Array1:", array1)
 print("Sortiertes Array2:", array2)
-#int calculate_wrapper(int* arr1, int size_arr1, int* arr2, int size_arr2)
+#invoke calculateDistance of solve_lib.c
 distance = lib.calculate_wrapper(array1.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), len(array1), array2.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), len(array2))
 print("Calculated distance:",distance)
+#invoke calcSimularity of solve_lib.c
+retval = lib.simularity(array1.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), array2.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), len(array1))
+retval2 = lib.calculate_simularities_wrapper(array1.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), array2.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), len(array1))
+print(retval)
+print(retval2)
