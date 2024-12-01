@@ -1,4 +1,4 @@
-Dependencies needed: numpy\
+Dependencies: numpy\
 -> pip install numpy\
 \
 \
