@@ -37,11 +37,15 @@ quickSort:
 
 
 _void_quicksort:
+    #save the old stack since were one stack deeper
     push rbp
     mov rbp, rsp
+
+    #incoming args:
     #Array: RDI
     #int left: RSI
     #int pivot: RDX
+    
     cmp rsi, rdx
     jge _ret_quicksort
     

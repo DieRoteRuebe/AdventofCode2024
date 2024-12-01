@@ -1,7 +1,8 @@
 #!bin/bash
 
-gcc -c -fPIC -o quicksort.o quicksort.c -march=native
+gcc -c -fPIC -o solve_lib.o solve_lib.c -march=native
 as -o QuicksortASM.o QuicksortASM.s --64
-gcc -shared -o quicksort.so quicksort.o QuicksortASM.o
+as -o Calculate_Distance.o Calculate_Distance.s --64
+gcc -shared -o solve_lib.so solve_lib.o QuicksortASM.o Calculate_Distance.o
 python3 day1.py
 
