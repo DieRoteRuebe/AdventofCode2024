@@ -18,7 +18,7 @@ for line in file:
 
 file.close()
 
-#Change the py arr into numpy arr -> Memorylayout needs to be contigous
+#Change the py arr into numpy arr -> Memorylayout needs to be contagious
 array1 = np.array(list1, dtype=np.int32)
 array2 = np.array(list2, dtype=np.int32)
 
