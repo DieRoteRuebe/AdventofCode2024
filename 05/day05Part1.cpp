@@ -71,6 +71,7 @@ int main()
 		}
 		updates.push_back(temp);
 	}
+	in_file2.close();
 	int sum = 0;
 	for (const auto& update : updates)
 	{
