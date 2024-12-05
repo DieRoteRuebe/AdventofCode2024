@@ -55,7 +55,6 @@ int main()
 		rules.emplace_back(stoi(temp[0]), stoi(temp[1]));
 	}
 	in_file.close();
-	std::cout << file << "\n";
 	
 
 	std::ifstream in_file2("input05_2.txt"); //X|Y
