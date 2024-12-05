@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <algorithm>
 
 std::vector<std::string> split(const std::string& str, char delimiter) {
 	std::vector<std::string> tokens;
@@ -18,25 +19,39 @@ std::vector<std::string> split(const std::string& str, char delimiter) {
 }
 
 bool isUpdateValid(const std::vector<int>& update, const std::vector<std::pair<int, int>>& rules) {
-	// Erstelle ein Mapping der Positionen der Seiten im Update
 	std::unordered_map<int, int> pagePositions;
 	for (size_t i = 0; i < update.size(); ++i) {
 		pagePositions[update[i]] = i;
 	}
 
-	// Prüfe jede Regel
 	for (const auto& rule : rules) {
 		int x = rule.first, y = rule.second;
 
-		// Prüfe nur, wenn beide Seiten im Update enthalten sind
 		if (pagePositions.count(x) && pagePositions.count(y)) {
-			// Wenn x nach y kommt, ist die Regel verletzt
 			if (pagePositions[x] > pagePositions[y]) {
 				return false;
 			}
 		}
 	}
 	return true;
+}
+
+std::vector<int> sortUpdate(const std::vector<int>& update, const std::vector<std::pair<int, int>>& rules) {
+	std::vector<int> sortedUpdate = update;
+	auto compare = [&rules](int a, int b) {
+		for (const auto& rule : rules) {
+			if (rule.first == a && rule.second == b) {
+				return true;
+			}
+			if (rule.first == b && rule.second == a) {
+				return false;
+			}
+		}
+		return false;
+		};
+
+	sort(sortedUpdate.begin(), sortedUpdate.end(), compare);
+	return sortedUpdate;
 }
 
 
@@ -70,15 +85,23 @@ int main()
 		}
 		updates.push_back(temp);
 	}
-	in_file2.close();
 	int sum = 0;
+	int updatedSum = 0;
 	for (const auto& update : updates)
 	{
 		if (isUpdateValid(update, rules))
 		{
 			sum += update[update.size() / 2];
 		}
+		else
+		{
+			std::vector<int> correct = sortUpdate(update, rules);
+			updatedSum += correct[correct.size() / 2];
+		}
 	}
-	std::cout << "sum: " << sum << "\n";
+	std::cout << "sum: " << sum << "\n"; //Part1
+	std::cout << "Update-sum: " << updatedSum << "\n"; //Part2
+
+
 	return 0;
 }
