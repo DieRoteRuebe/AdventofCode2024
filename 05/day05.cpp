@@ -29,7 +29,7 @@ bool isUpdateValid(const std::vector<int>& update, const std::vector<std::pair<i
 	}
 
 	for (const auto& rule : rules)
-		{
+	{
 		int x = rule.first, y = rule.second;
 
 		if (pagePositions.count(x) && pagePositions.count(y))
@@ -61,7 +61,7 @@ std::vector<int> sortUpdate(const std::vector<int>& update, const std::vector<st
 			}
 		}
 		return false;
-		};
+	};
 	
 	sort(sortedUpdate.begin(), sortedUpdate.end(), compare);
 	
