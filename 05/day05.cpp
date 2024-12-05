@@ -109,7 +109,7 @@ int main()
 	in_file.close();
 	
 
-	std::ifstream in_file2("input05_2.txt"); //X|Y
+	std::ifstream in_file2("input05_2.txt"); //Digit,Digit
 	std::vector<std::vector<int>> updates;
 	while (std::getline(in_file2, text))
 	{
