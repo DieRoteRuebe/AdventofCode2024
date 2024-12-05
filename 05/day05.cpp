@@ -6,21 +6,25 @@
 #include <unordered_map>
 #include <algorithm>
 
-std::vector<std::string> split(const std::string& str, char delimiter) {
+std::vector<std::string> split(const std::string& str, char delimiter) 
+{
 	std::vector<std::string> tokens;
 	std::stringstream ss(str);
 	std::string token;
 
-	while (std::getline(ss, token, delimiter)) {
+	while (std::getline(ss, token, delimiter)) 
+	{
 		tokens.push_back(token);
 	}
 
 	return tokens;
 }
 
-bool isUpdateValid(const std::vector<int>& update, const std::vector<std::pair<int, int>>& rules) {
+bool isUpdateValid(const std::vector<int>& update, const std::vector<std::pair<int, int>>& rules) 
+{
 	std::unordered_map<int, int> pagePositions;
-	for (size_t i = 0; i < update.size(); ++i) {
+	for (size_t i = 0; i < update.size(); ++i) 
+	{
 		pagePositions[update[i]] = i;
 	}
 
@@ -36,23 +40,56 @@ bool isUpdateValid(const std::vector<int>& update, const std::vector<std::pair<i
 	return true;
 }
 
-std::vector<int> sortUpdate(const std::vector<int>& update, const std::vector<std::pair<int, int>>& rules) {
+std::vector<int> sortUpdate(const std::vector<int>& update, const std::vector<std::pair<int, int>>& rules) 
+{
 	std::vector<int> sortedUpdate = update;
+	//ich hasse compare lambdas btw!! aber so funktionierts:
 	auto compare = [&rules](int a, int b) {
-		for (const auto& rule : rules) {
-			if (rule.first == a && rule.second == b) {
+		for (const auto& rule : rules) 
+		{
+			if (rule.first == a && rule.second == b) 
+			{
 				return true;
 			}
-			if (rule.first == b && rule.second == a) {
+			if (rule.first == b && rule.second == a) 
+			{
 				return false;
 			}
 		}
 		return false;
 		};
-
+	
 	sort(sortedUpdate.begin(), sortedUpdate.end(), compare);
-	return sortedUpdate;
+	
+
+
+	//Nochmal verständlicher weils Flummis wie mich gibt:
+	std::vector<int> sortedUpdate2 = update;
+	for (int i = 0; i < sortedUpdate2.size() - 1; i++) 
+	{
+		for (int j = i + 1; j < sortedUpdate2.size(); j++) 
+		{
+			bool swap = false;
+			for (const auto& rule : rules) 
+			{
+				if (rule.first == sortedUpdate2[j] && rule.second == sortedUpdate2[i]) {
+					swap = true;
+					break;
+				}
+				if (rule.first == sortedUpdate2[i] && rule.second == sortedUpdate2[j]) {
+					swap = false;
+					break;
+				}
+			}
+			if (swap) {
+				std::swap(sortedUpdate2[i], sortedUpdate2[j]);
+			}
+		}
+	}
+	return sortedUpdate2;
 }
+
+
 
 
 int main()
@@ -99,8 +136,8 @@ int main()
 			updatedSum += correct[correct.size() / 2];
 		}
 	}
-	std::cout << "sum: " << sum << "\n"; //Part1
-	std::cout << "Update-sum: " << updatedSum << "\n"; //Part2
+	std::cout << "sum: " << sum << "\n";
+	std::cout << "Update-sum: " << updatedSum << "\n";
 
 
 	return 0;
