@@ -28,11 +28,14 @@ bool isUpdateValid(const std::vector<int>& update, const std::vector<std::pair<i
 		pagePositions[update[i]] = i;
 	}
 
-	for (const auto& rule : rules) {
+	for (const auto& rule : rules)
+		{
 		int x = rule.first, y = rule.second;
 
-		if (pagePositions.count(x) && pagePositions.count(y)) {
-			if (pagePositions[x] > pagePositions[y]) {
+		if (pagePositions.count(x) && pagePositions.count(y))
+		{
+			if (pagePositions[x] > pagePositions[y]) 
+			{
 				return false;
 			}
 		}
@@ -44,7 +47,8 @@ std::vector<int> sortUpdate(const std::vector<int>& update, const std::vector<st
 {
 	std::vector<int> sortedUpdate = update;
 	//ich hasse compare lambdas btw!! aber so funktionierts:
-	auto compare = [&rules](int a, int b) {
+	auto compare = [&rules](int a, int b) 
+	{
 		for (const auto& rule : rules) 
 		{
 			if (rule.first == a && rule.second == b) 
@@ -72,16 +76,19 @@ std::vector<int> sortUpdate(const std::vector<int>& update, const std::vector<st
 			bool swap = false;
 			for (const auto& rule : rules) 
 			{
-				if (rule.first == sortedUpdate2[j] && rule.second == sortedUpdate2[i]) {
+				if (rule.first == sortedUpdate2[j] && rule.second == sortedUpdate2[i]) 
+				{
 					swap = true;
 					break;
 				}
-				if (rule.first == sortedUpdate2[i] && rule.second == sortedUpdate2[j]) {
+				if (rule.first == sortedUpdate2[i] && rule.second == sortedUpdate2[j]) 
+				{
 					swap = false;
 					break;
 				}
 			}
-			if (swap) {
+			if (swap) 
+			{
 				std::swap(sortedUpdate2[i], sortedUpdate2[j]);
 			}
 		}
