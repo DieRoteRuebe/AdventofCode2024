@@ -36,7 +36,6 @@ std::vector<int> changeDir(int& currentDir)
 
 bool doesGuardLoop(int startX, int startY, int dir, std::vector<std::vector<char>>& mainmp, int obstX, int obstY) 
 {
-	std::set<std::pair<int, int>> visited;
 	visited.insert({ startX, startY });
 	int guarddir = dir;
 	int x = startX, y = startY;
@@ -45,7 +44,6 @@ bool doesGuardLoop(int startX, int startY, int dir, std::vector<std::vector<char
 	std::set<std::tuple<int, int, int>> visited_dirs;
 	
 	map[obstY][obstX] = '#';
-	int moves = 0;
 	while (true) 
 	{
 		visited_dirs.insert({ x,y,guarddir });
@@ -67,11 +65,6 @@ bool doesGuardLoop(int startX, int startY, int dir, std::vector<std::vector<char
 			{
 				return true;
 			}
-			else
-			{
-				moves++;
-			}
-			visited.insert({ x, y });
 		}
 	}
 
@@ -123,8 +116,7 @@ int main()
 	std::vector<int> direction = changeDir(dir);
 	std::cout << y.size() << std::endl;
 	std::cout << y[0].size() << std::endl;
-	std::pair<int, int> cord = { intx, inty };
-	visited.insert(cord);
+	visited.insert(std::pair<int,int>{ intx,inty });
 	int obstructions = 0;
 	std::set<std::pair<int, int>> testedObstructions;
 	while (inty > -1 && intx > -1 && inty < y.size()-1 && intx < y[0].size()-1)
@@ -136,7 +128,6 @@ int main()
 		}
 		intx += direction[0];
 		inty += direction[1];
-		cord = { intx, inty };
 
 
 		if (y[inty][intx] == '#')
@@ -148,9 +139,9 @@ int main()
 		else
 		{
 
-			if (visited.find(cord) == visited.end())
+			if (visited.find(std::pair<int,int>{ intx,inty }) == visited.end())
 			{
-				visited.insert(cord);
+				visited.insert(std::pair<int,int>{ intx,inty });
 				moves++;
 
 			}
