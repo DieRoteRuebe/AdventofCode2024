@@ -34,17 +34,16 @@ std::vector<int> changeDir(int& currentDir)
 }
 
 
-bool doesGuardLoop(int startX, int startY, int dir, std::vector<std::vector<char>>& mainmp, int obstX, int obstY) 
+bool doesGuardLoop(int startX, int startY, int dir, std::vector<std::vector<char>>& mainmp, int obstX, int obstY)
 {
-	visited.insert({ startX, startY });
 	int guarddir = dir;
 	int x = startX, y = startY;
 	std::vector<std::vector<char>> map = mainmp;
 	std::vector<int> direction = changeDir(guarddir);
 	std::set<std::tuple<int, int, int>> visited_dirs;
-	
+
 	map[obstY][obstX] = '#';
-	while (true) 
+	while (true)
 	{
 		visited_dirs.insert({ x,y,guarddir });
 		x += direction[0];
@@ -53,15 +52,15 @@ bool doesGuardLoop(int startX, int startY, int dir, std::vector<std::vector<char
 
 		if (x < 0 || y < 0 || y >= map.size() || x >= map[0].size()) break;
 
-		if (map[y][x] == '#') 
+		if (map[y][x] == '#')
 		{
 			x -= direction[0];
 			y -= direction[1];
 			direction = changeDir(guarddir);
 		}
-		else 
+		else
 		{
-			if (visited_dirs.find({ x, y, guarddir }) != visited_dirs.end()) 
+			if (visited_dirs.find({ x, y, guarddir }) != visited_dirs.end())
 			{
 				return true;
 			}
@@ -81,7 +80,7 @@ int main()
 	std::string text;
 	std::ifstream in_file("input06.txt");
 	std::vector<int> ps;
-	
+
 	int inty = 0;
 	int intx = 0;
 	while (std::getline(in_file, text))
@@ -107,7 +106,7 @@ int main()
 
 	inty = ps[1];
 	intx = ps[0];
-	
+
 	int dir = 3;
 
 	int moves = 1;
@@ -116,12 +115,12 @@ int main()
 	std::vector<int> direction = changeDir(dir);
 	std::cout << y.size() << std::endl;
 	std::cout << y[0].size() << std::endl;
-	visited.insert(std::pair<int,int>{ intx,inty });
+	visited.insert(std::pair<int, int>{ intx, inty });
 	int obstructions = 0;
 	std::set<std::pair<int, int>> testedObstructions;
-	while (inty > -1 && intx > -1 && inty < y.size()-1 && intx < y[0].size()-1)
+	while (inty > -1 && intx > -1 && inty < y.size() - 1 && intx < y[0].size() - 1)
 	{
-		testedObstructions.insert(std::pair<int,int>{ intx,inty });
+		testedObstructions.insert(std::pair<int, int>{ intx, inty });
 		if (inty < y.size() - 1 && intx < y[0].size() - 1 && testedObstructions.find({ intx + direction[0], inty + direction[1] }) == testedObstructions.end() && doesGuardLoop(intx, inty, dir, y, intx + direction[0], inty + direction[1]))
 		{
 			obstructions++;
@@ -139,13 +138,13 @@ int main()
 		else
 		{
 
-			if (visited.find(std::pair<int,int>{ intx,inty }) == visited.end())
+			if (visited.find(std::pair<int, int>{ intx, inty }) == visited.end())
 			{
-				visited.insert(std::pair<int,int>{ intx,inty });
+				visited.insert(std::pair<int, int>{ intx, inty });
 				moves++;
 
 			}
-			
+
 		}
 	}
 
