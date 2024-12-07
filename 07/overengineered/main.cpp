@@ -154,6 +154,5 @@ int main()
 	{
 		delete l;
 	}
-	pool.~Threadpool();
 	return 0;
 }

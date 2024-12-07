@@ -162,7 +162,6 @@ void Threadpool::join_threads()
         pthread_mutex_unlock(&(Threadpool::lock));
 
     }
-    Threadpool::threadpool_stop_threads();
 }
 
 void Threadpool::threadpool_stop_threads()
