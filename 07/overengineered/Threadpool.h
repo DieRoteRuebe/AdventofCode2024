@@ -29,6 +29,16 @@ public:
     Threadpool(int QUEUE_SIZE, int THREAD_COUNT, Logger *logger);
     ~Threadpool();
 
+    void threadpool_stop_threads();     // Sinc Threads and stop even if work is still in qeue
+    void join_threads();                // wait for Queue to be empty and threads doing work -> then issue shutdown and stop_threads
+
+    int threadpool_add_task(void (*function)(void *), void* arg);
+private:
+    static void* worker_wrapper(void *arg);
+    void* threads_work(void* argv);     // Work Function
+    void threadpool_destroy();          // Destory Mutexes and Threads
+
+    bool threads_stopped;
     Logger *L;
     std::mutex id_mutex;
     int thread_counter = 1;
@@ -39,14 +49,5 @@ public:
     std::atomic_bool shutdown;          // Flag to shutdown threads
     int queue_size;
     int thread_count;
-    std::atomic_bool join;
-    void threadpool_stop_threads();     // Sinc Threads and stop even if work is still in qeue
-    void join_threads();                // wait for Queue to be empty and threads doing work -> then issue shutdown and stop_threads
-
-    int threadpool_add_task(void (*function)(void *), void* arg);
-private:
-    static void* worker_wrapper(void *arg);
-    void* threads_work(void* argv);     // Work Function
-    void threadpool_destroy();          // Destory Mutexes and Threads
     
 };

@@ -5,6 +5,7 @@
 Threadpool::Threadpool(int QUEUE_SIZE, int THREAD_COUNT, Logger *logger)
 {
     Threadpool::L = logger;
+    Threadpool::threads_stopped = false;
     Threadpool::L->add_trace_level("THREADPOOL");
     Threadpool::thread_count = THREAD_COUNT;
     Threadpool::threads = new pthread_t[THREAD_COUNT];
@@ -22,7 +23,6 @@ Threadpool::Threadpool(int QUEUE_SIZE, int THREAD_COUNT, Logger *logger)
 
 Threadpool::~Threadpool()
 {
-    delete[] Threadpool::threads;
     Threadpool::threadpool_destroy();
 };
 
@@ -48,7 +48,7 @@ void* Threadpool::threads_work(void* argv)
     }
     pthread_mutex_unlock(&(Threadpool::lock));
     pthread_t thread_id = pthread_self();
-    while(!Threadpool::shutdown)
+    while(true)
     {
               
         //Lock the Tasks Queue
@@ -78,7 +78,8 @@ void* Threadpool::threads_work(void* argv)
             {
                 L->log("System-ID: "+std::to_string(thread_id)+": Shutdown Signal was issued, shutting down...", (trace_level));
             }
-            continue;
+            pthread_mutex_unlock(&(Threadpool::lock));
+            break;
         }
 
         task_t task;
@@ -101,11 +102,12 @@ void* Threadpool::threads_work(void* argv)
             void* arg = static_cast<void*>(&con);
             (*(task.function))(arg); 
         }
-        else{
+        else
+        {
             pthread_mutex_unlock(&(Threadpool::lock));
         }
-        //Unlock Task Queue
     }
+    pthread_mutex_lock(&(Threadpool::lock));
     if(Threadpool::L != nullptr)
     {
         L->log("System-ID: "+std::to_string(thread_id)+": Leaving Workloop", (trace_level));
@@ -119,7 +121,7 @@ int Threadpool::threadpool_add_task(void (*function)(void *), void* arg)
 {
     pthread_mutex_lock(&(Threadpool::lock));
 
-    if(Threadpool::tasks.size()== Threadpool::queue_size)
+    if(Threadpool::shutdown ||Threadpool::tasks.size()== Threadpool::queue_size)
     {
         pthread_mutex_unlock(&(Threadpool::lock));
         return -1;
@@ -143,11 +145,10 @@ void Threadpool::threadpool_destroy()
         Threadpool::L->log("Destroying Mutex and Threads", "THREADPOOL");
     }
     
-
-
+    
     pthread_mutex_destroy(&(Threadpool::lock));
     pthread_cond_destroy(&(Threadpool::notify));
-
+    delete[] Threadpool::threads;
 }
 
 void Threadpool::join_threads()
@@ -162,12 +163,17 @@ void Threadpool::join_threads()
         pthread_mutex_unlock(&(Threadpool::lock));
 
     }
+    Threadpool::threadpool_stop_threads();
 }
 
 void Threadpool::threadpool_stop_threads()
 {
-    
     pthread_mutex_lock(&(Threadpool::lock));
+    if(Threadpool::threads_stopped)
+    {
+        pthread_mutex_unlock(&(Threadpool::lock));
+        return;
+    }
     Threadpool::shutdown = true;
     if(Threadpool::L != nullptr)
     {
@@ -178,6 +184,15 @@ void Threadpool::threadpool_stop_threads()
 
     for(int i = 0; i < Threadpool::thread_count; i++)
     {
-        pthread_join((Threadpool::threads[i]), NULL);
+            int ret = pthread_join(Threadpool::threads[i], nullptr);
+        if (ret != 0) 
+        {
+            if (Threadpool::L != nullptr) 
+            {
+                Threadpool::L->log("pthread_join failed for thread " + std::to_string(i) + 
+                                " with error code: " + std::to_string(ret), "THREADPOOL");
+            }
+        }
     }
+    Threadpool::threads_stopped = true;
 }
