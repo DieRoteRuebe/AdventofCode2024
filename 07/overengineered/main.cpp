@@ -144,6 +144,7 @@ int main()
 	}
 
 	pool.join_threads();
+	pool.threadpool_stop_threads();
 	for(struct line*& l : v)
 	{
 		result += l->internal_sum;
