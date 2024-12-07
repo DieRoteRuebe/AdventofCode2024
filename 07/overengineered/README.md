@@ -1,2 +1,2 @@
-This Project was built in Linux\n
+This Project was built in Linux\
 To compile: bash compile.sh
