@@ -5,7 +5,7 @@
 #include <iostream>
 #include "Threadpool.h"
 
-#define MAXTHREADS 4
+#define MAXTHREADS 8
 
 
 struct line
@@ -117,7 +117,7 @@ int main()
 		line* l = new line();
 		
 		l->Value = stoll(v1[0]);
-		std::cout << "Value: " << l->Value << std::endl;
+		//std::cout << "Value: " << l->Value << std::endl;
 		v1 = split(v1[1], ' ');
 
 		for (const auto& value : v1)
@@ -144,10 +144,8 @@ int main()
 	}
 
 	pool.join_threads();
-	
 	for(struct line*& l : v)
 	{
-		std::cout << "internal sum: " << l->internal_sum << std::endl;
 		result += l->internal_sum;
 	}
 	std::cout << "Result: " << result << std::endl;
@@ -156,6 +154,6 @@ int main()
 	{
 		delete l;
 	}
+	pool.~Threadpool();
 	return 0;
-
 }
