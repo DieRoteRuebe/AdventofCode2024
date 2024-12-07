@@ -19,17 +19,19 @@ long long applyOperation(long long lhs, long long rhs, char op)
 {
     if (op == '+') 
 	{
-        return lhs + rhs;
-    } else if (op == '*') 
-	{
-        return lhs * rhs;
-    } else if (op == '|') 
+        	return lhs + rhs;
+    	}
+    	else if (op == '*') 
+    	{
+        	return lhs * rhs;
+    	} 
+	else if (op == '|') 
 	{
         // concatenate the numbers
-        std::string lhs_str = std::to_string(lhs);
-        std::string rhs_str = std::to_string(rhs);
-        return std::stoll(lhs_str + rhs_str);
-    }
+        	std::string lhs_str = std::to_string(lhs);
+        	std::string rhs_str = std::to_string(rhs);
+        	return std::stoll(lhs_str + rhs_str);
+    	}
     return 0;
 }
 
@@ -56,28 +58,30 @@ void calculate(void* argv)
 	std::vector<std::string> comb;
 	generateCombinations(op, l->v.size()-1, "", comb);
 
-    bool flag = false;
-    for (const std::string& combo : comb) {
+    	bool flag = false;
+    	for (const std::string& combo : comb) 
+    	{
         long long sum = l->v[0];
         int y = 0;
 
         // Compute the expression based on the generated combination
         for (size_t i = 1; i < l->v.size(); ++i) 
-		{
+	{
             sum = applyOperation(sum, l->v[i], combo[y]);
             ++y;
-        }
+	}
 
-        if (sum == l->Value) 
+        	if (sum == l->Value) 
 		{
 			std::string channel_name = "THREAD-"+std::to_string(*con->thread_id);
 			std::string logmsg = "Hit at: "+std::to_string(l->Value)+" combo: "+combo+" Sum: "+std::to_string(sum);
 			con->l->log(logmsg, channel_name);
-            flag = true;
-            break;
+           	 	flag = true;
+            		break;
+	        }
         }
-        }
-        if (flag) {
+        if (flag) 
+	{
             l->internal_sum += l->Value;
         }	
 }
