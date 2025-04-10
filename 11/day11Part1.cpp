@@ -122,7 +122,6 @@ int main()
 	int blinks = 25;
 	long long ret = calculate(stones, 25);
 	std::cout << "Part1: " << ret << "\n";
-	//Ok this will take some time -> I´ll implement a threaded solution with maybe some bit shenanigans to solve part2. Solution 2 coming soon.
 	//long long ret2 = calculate(stones, 75);
 	//std::cout << "Part2: " << ret2 << "\n";
 	return 0;
